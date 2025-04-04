@@ -8,13 +8,15 @@ const CategoryCard = ({ category, label, description }) => {
 
   const handleGenerateQuiz = async () => {
     try {
-      // Call your backend API to generate quiz questions for this category.
-      await generateQuiz(category);
+      console.log("Generating quiz for category:", category);
+      const data = await generateQuiz(category);
+      console.log("Quiz generated successfully:", data);
       setShowModal(false);
-      // Navigate to the Quiz page.
+      console.log("Navigating to /quiz");
       navigate("/quiz");
     } catch (error) {
       console.error("Error generating quiz:", error);
+      alert("Error generating quiz. Please try again later.");
     }
   };
 
@@ -51,7 +53,8 @@ const CategoryCard = ({ category, label, description }) => {
               </div>
               <div className="modal-body">
                 <p>
-                  This quiz for <strong>{label}</strong> will include AI-generated questions based on the selected category.
+                  This quiz for <strong>{label}</strong> will include AI-generated
+                  questions based on the selected category.
                 </p>
               </div>
               <div className="modal-footer">

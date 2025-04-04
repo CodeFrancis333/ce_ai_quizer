@@ -1,25 +1,35 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoins } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoins } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
-  // Replace these dummy values with your actual data.
-  const coins = 150;
-  const user = {
-    name: 'John Doe',
-    profilePic: 'https://via.placeholder.com/40', // Replace with the actual profile image URL.
-  };
+  // For demonstration, use dummy data.
+  // Replace with an API call to /api/profile/ once authentication is set up.
+  const [profile, setProfile] = useState({
+    username: "John Doe",
+    coin_balance: 100,
+    profile_pic: "https://via.placeholder.com/40"
+  });
+
+  // Example for fetching the profile when using authentication:
+  /*
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/api/profile/", {
+      headers: { Authorization: "Token <YOUR_TOKEN_HERE>" }
+    })
+    .then(response => setProfile(response.data))
+    .catch(error => console.error("Error fetching profile:", error));
+  }, []);
+  */
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm">
       <div className="container">
-        {/* Logo on the left */}
         <Link className="navbar-brand" to="/">
-          <img src="/logo.png" alt="Logo" style={{ height: '40px' }} />
+          <img src="/logo.png" alt="Logo" style={{ height: "40px" }} />
         </Link>
-
-        {/* Hamburger menu toggler */}
         <button
           className="navbar-toggler"
           type="button"
@@ -31,13 +41,11 @@ const Navbar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-
-        {/* Collapsible content */}
         <div className="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
           <ul className="navbar-nav align-items-center">
             <li className="nav-item me-3">
               <span className="nav-link">
-                <FontAwesomeIcon icon={faCoins} /> {coins} coins
+                <FontAwesomeIcon icon={faCoins} /> {profile.coin_balance} coins
               </span>
             </li>
             <li className="nav-item dropdown">
@@ -50,12 +58,12 @@ const Navbar = () => {
                 aria-expanded="false"
               >
                 <img
-                  src={user.profilePic}
+                  src={profile.profile_pic}
                   alt="Profile"
                   className="rounded-circle me-2"
-                  style={{ width: '40px', height: '40px' }}
+                  style={{ width: "40px", height: "40px" }}
                 />
-                {user.name}
+                {profile.username}
               </a>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 <li>

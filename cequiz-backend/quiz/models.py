@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 class QuizQuestion(models.Model):
@@ -54,3 +55,11 @@ class QuizQuestion(models.Model):
 
     def __str__(self):
         return self.question[:50]
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    coin_balance = models.IntegerField(default=100)  # Default starting coin balance
+    profile_pic = models.URLField(blank=True, null=True)  # Optional profile picture URL
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"

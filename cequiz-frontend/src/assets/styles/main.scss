@@ -1,20 +1,36 @@
-// Import Bootstrap's SCSS
 @import "bootstrap/scss/bootstrap";
 
 // Custom variable overrides and styles
 $primary: #0047ab;
 
 body {
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #0047ab, #2f2f2f);
   font-family: 'Poppins', sans-serif;
+  color: #fff; // Ensure default text color is light if needed
 }
 
-.card {
-  border-radius: 1rem;
-}
+/* Category Card Custom Styles */
+.category-card {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
-/* Custom Navbar styles */
-.custom-navbar {
-  background: linear-gradient(90deg, #0047ab, #2f2f2f);
-  border-bottom: 1px solid #ccc;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .card-text {
+    font-size: 1rem;
+  }
 }

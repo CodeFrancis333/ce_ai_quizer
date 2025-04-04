@@ -1,41 +1,46 @@
-# quiz/views.py
 import openai
 import re
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from .models import QuizQuestion
 from .serializers import QuizQuestionSerializer
+from rest_framework import generics, permissions
+from .serializers import UserProfileSerializer
 
-# Make sure to set your OpenAI API key in settings or as an environment variable
-openai.api_key = 'YOUR_OPENAI_API_KEY'
+# Uncomment and set your actual API key when available
+# openai.api_key = 'YOUR_OPENAI_API_KEY'
 
 class GenerateQuizAPIView(APIView):
     """
     POST endpoint to generate a quiz for a given category.
     Expects JSON: { "category": "Reinforced Concrete Design" }
     """
-
     def post(self, request, *args, **kwargs):
         category = request.data.get("category")
         if not category:
             return Response({"error": "Category is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Example prompt for AI: Adjust the prompt as needed
-        prompt = (
-            f"Generate 10 multiple choice questions for the category {category} in Civil Engineering. "
-            "Return 5 easy definition questions, 3 medium problem solving questions, and 2 high difficulty "
-            "complicated questions. For each question, provide 4 options (A, B, C, D), indicate the correct "
-            "option, and include a brief explanation. Format each question as follows:\n\n"
-            "Question: <question text>\n"
-            "A: <option text>\n"
-            "B: <option text>\n"
-            "C: <option text>\n"
-            "D: <option text>\n"
-            "Correct: <A/B/C/D>\n"
-            "Explanation: <explanation>\n\n"
+        # For testing, use dummy generated text instead of calling OpenAI
+        generated_text = (
+            "Question: What is the derivative of x^2?\n"
+            "A: 2x\n"
+            "B: x\n"
+            "C: 2\n"
+            "D: x^2\n"
+            "Correct: A\n"
+            "Explanation: The derivative of x^2 is 2x.\n\n"
+            "Question: What is the integral of 2x?\n"
+            "A: x^2\n"
+            "B: 2x\n"
+            "C: x\n"
+            "D: 2\n"
+            "Correct: A\n"
+            "Explanation: The integral of 2x is x^2 plus a constant.\n\n"
         )
 
+        # Uncomment this block to use the OpenAI API once you have a valid API key.
+        """
         try:
             response = openai.Completion.create(
                 engine="text-davinci-003",  # or another model as appropriate
@@ -48,6 +53,7 @@ class GenerateQuizAPIView(APIView):
             generated_text = response.choices[0].text.strip()
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        """
 
         # Parse the generated text to extract questions
         question_pattern = re.compile(
@@ -79,3 +85,16 @@ class GenerateQuizAPIView(APIView):
         
         serializer = QuizQuestionSerializer(created_questions, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class QuizListAPIView(generics.ListAPIView):
+    queryset = QuizQuestion.objects.all()
+    serializer_class = QuizQuestionSerializer
+
+class UserProfileAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self):
+        # Returns the profile of the currently authenticated user
+        return self.request.user.profile

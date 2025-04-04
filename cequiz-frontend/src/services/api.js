@@ -3,11 +3,13 @@ import axios from "axios";
 const API_BASE_URL = "http://127.0.0.1:8000/api";
 
 export const generateQuiz = async (category) => {
+  console.log("Calling generateQuiz API for category:", category);
   try {
     const response = await axios.post(`${API_BASE_URL}/generate/`, { category });
+    console.log("generateQuiz response:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error generating quiz:", error);
+    console.error("Error in generateQuiz API:", error);
     throw error;
   }
 };
