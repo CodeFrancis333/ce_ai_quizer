@@ -1,0 +1,56 @@
+# ------------------------------------------------------
+# 1) Logs
+# ------------------------------------------------------
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ------------------------------------------------------
+# 2) Node / React
+# ------------------------------------------------------
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# If you build production files in a "build" folder, ignore it too:
+build/
+
+# ------------------------------------------------------
+# 3) Python / Django
+# ------------------------------------------------------
+__pycache__/
+*.pyc
+
+# Common Python virtual environments:
+venv/
+env/
+.venv/
+
+# Environment / secrets
+*.env
+local_settings.py
+
+# SQLite DB (if used)
+*.sqlite3
+
+# Django static / media (if generated locally):
+staticfiles/
+media/
+
+# ------------------------------------------------------
+# 4) OS and Editor Files
+# ------------------------------------------------------
+.DS_Store
+.vscode/
+!.vscode/extensions.json  # Keep recommended extensions if you like
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

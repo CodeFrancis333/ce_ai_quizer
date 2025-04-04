@@ -1,0 +1,20 @@
+// Import Bootstrap's SCSS
+@import "bootstrap/scss/bootstrap";
+
+// Custom variable overrides and styles
+$primary: #0047ab;
+
+body {
+  background-color: #f8f9fa;
+  font-family: 'Poppins', sans-serif;
+}
+
+.card {
+  border-radius: 1rem;
+}
+
+/* Custom Navbar styles */
+.custom-navbar {
+  background: linear-gradient(90deg, #0047ab, #2f2f2f);
+  border-bottom: 1px solid #ccc;
+}
