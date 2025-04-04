@@ -55,16 +55,4 @@ media/
 *.sln
 *.sw?
 
-# ------------------------------------------------------
-# 5) Secrets / API Keys / Certificates
-# ------------------------------------------------------
-*.pem
-*.key
-*.crt
-*.pfx
-*.cert
-*.secret
-credentials.json
-secrets/
-private.key
-firebase-adminsdk.json
+.env
