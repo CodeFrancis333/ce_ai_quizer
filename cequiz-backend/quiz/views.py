@@ -7,6 +7,13 @@ from .models import QuizQuestion
 from .serializers import QuizQuestionSerializer
 from rest_framework import generics, permissions
 from .serializers import UserProfileSerializer
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.authtoken.models import Token
+from .serializers import UserSettingsSerializer
+
 
 # Uncomment and set your actual API key when available
 # openai.api_key = 'YOUR_OPENAI_API_KEY'
@@ -96,5 +103,68 @@ class UserProfileAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     
     def get_object(self):
-        # Returns the profile of the currently authenticated user
         return self.request.user.profile
+
+# Registration endpoint
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if not username or not password:
+        return Response({"error": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(username=username).exists():
+        return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.create_user(username=username, email=email, password=password)
+    token, created = Token.objects.get_or_create(user=user)
+    return Response({"token": token.key}, status=status.HTTP_201_CREATED)
+
+# Login endpoint
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({"token": token.key})
+    return Response({"error": "Invalid credentials."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserSettingsAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSettingsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.profile
+
+class ChangePasswordAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        user = request.user
+        current_password = request.data.get("current_password")
+        new_password = request.data.get("new_password")
+        confirm_password = request.data.get("confirm_password")
+
+        if not current_password or not new_password or not confirm_password:
+            return Response({"error": "All password fields are required."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        if not user.check_password(current_password):
+            return Response({"error": "Current password is incorrect."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        if new_password != confirm_password:
+            return Response({"error": "New passwords do not match."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+        return Response({"message": "Password changed successfully."}, status=status.HTTP_200_OK)

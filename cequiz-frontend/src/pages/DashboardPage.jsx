@@ -1,6 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import CategoryCard from "../components/CategoryCard";
+import LoginPromptModal from "../components/LoginPromptModal";
+import { AuthContext } from "../context/AuthContext"; // Make sure you have this set up
 
 const topCategories = [
   { value: "Calculus", label: "Calculus", description: "Basics and definitions" },
@@ -16,6 +18,18 @@ const leaderboard = [
 ];
 
 const DashboardPage = () => {
+  const { token } = useContext(AuthContext);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const navigate = useNavigate();
+
+  const handleStartQuiz = () => {
+    if (token) {
+      navigate("/quiz");
+    } else {
+      setShowLoginPrompt(true);
+    }
+  };
+
   return (
     <div className="container py-5">
       {/* Main row with two columns: Left (col-md-8) and Right (col-md-4) */}
@@ -28,9 +42,16 @@ const DashboardPage = () => {
             <p>
               Your coin balance: <strong>100</strong>
             </p>
-            <Link to="/quiz" className="btn btn-success">
-              Start Random Quiz
-            </Link>
+            {/* If user is logged in, show the Link; otherwise, use a button that triggers the login prompt */}
+            {token ? (
+              <Link to="/quiz" className="btn btn-success">
+                Start Random Quiz
+              </Link>
+            ) : (
+              <button className="btn btn-success" onClick={handleStartQuiz}>
+                Start Random Quiz
+              </button>
+            )}
           </div>
 
           {/* Top Categories Section */}
@@ -76,6 +97,9 @@ const DashboardPage = () => {
           </ul>
         </div>
       </div>
+      {showLoginPrompt && !token && (
+        <LoginPromptModal onClose={() => setShowLoginPrompt(false)} />
+      )}
     </div>
   );
 };

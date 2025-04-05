@@ -51,15 +51,18 @@ class QuizQuestion(models.Model):
     option_d = models.TextField()
     correct_answer = models.CharField(max_length=1)  # 'A', 'B', 'C', or 'D'
     solution = models.TextField(blank=True, null=True)  # For AI-generated step-by-step solution
-    image_url = models.URLField(blank=True, null=True)  # Optional: URL for a quiz diagram
+    image_url = models.URLField(blank=True, null=True)  
 
     def __str__(self):
         return self.question[:50]
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    coin_balance = models.IntegerField(default=100)  # Default starting coin balance
-    profile_pic = models.URLField(blank=True, null=True)  # Optional profile picture URL
+    coin_balance = models.IntegerField(default=100)
+    profile_pic = models.URLField(blank=True, null=True)  # URL for profile picture
+    bio = models.TextField(blank=True, null=True)
+    school = models.CharField(max_length=255, blank=True, null=True)
+    display_name = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"

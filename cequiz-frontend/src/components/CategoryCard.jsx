@@ -1,18 +1,27 @@
-import React, { useState } from "react";
+// src/components/CategoryCard.jsx
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { generateQuiz } from "../services/api";
+import { AuthContext } from "../context/AuthContext"; // Ensure you have this context set up
+import LoginPromptModal from "./LoginPromptModal";
 
 const CategoryCard = ({ category, label, description }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleGenerateQuiz = async () => {
+    // If not logged in, show the login prompt
+    if (!token) {
+      setShowLoginPrompt(true);
+      return;
+    }
     try {
       console.log("Generating quiz for category:", category);
       const data = await generateQuiz(category);
       console.log("Quiz generated successfully:", data);
       setShowModal(false);
-      console.log("Navigating to /quiz");
       navigate("/quiz");
     } catch (error) {
       console.error("Error generating quiz:", error);
@@ -24,7 +33,13 @@ const CategoryCard = ({ category, label, description }) => {
     <>
       <div
         className="card category-card mb-3"
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          if (!token) {
+            setShowLoginPrompt(true);
+          } else {
+            setShowModal(true);
+          }
+        }}
         style={{ cursor: "pointer" }}
       >
         <div className="card-body">
@@ -33,7 +48,7 @@ const CategoryCard = ({ category, label, description }) => {
         </div>
       </div>
 
-      {showModal && (
+      {showModal && token && (
         <div
           className="modal d-block"
           tabIndex="-1"
@@ -76,6 +91,10 @@ const CategoryCard = ({ category, label, description }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {showLoginPrompt && !token && (
+        <LoginPromptModal onClose={() => setShowLoginPrompt(false)} />
       )}
     </>
   );
