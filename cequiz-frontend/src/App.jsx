@@ -9,7 +9,7 @@ import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage"; // Added settings page route
 import Navbar from "./components/Navbar";
 import PublicRoute from "./components/PublicRoute";
-import { AuthProvider } from "./context/AuthContext";  // Wrap your app with AuthProvider
+import { AuthProvider } from "./context/AuthContext";  // Wrap with AuthProvider
 
 function App() {
   return (
