@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CategoryCard from "../components/CategoryCard";
 import LoginPromptModal from "../components/LoginPromptModal";
-import { AuthContext } from "../context/AuthContext"; // Make sure you have this set up
+import { AuthContext } from "../context/AuthContext"; 
 
 const topCategories = [
   { value: "Calculus", label: "Calculus", description: "Basics and definitions" },
