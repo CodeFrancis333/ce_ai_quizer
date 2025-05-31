@@ -2,7 +2,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { generateQuiz } from "../services/api";
-import { AuthContext } from "../context/AuthContext"; // Ensure you have this context set up
+import { AuthContext } from "../context/AuthContext"; 
 import LoginPromptModal from "./LoginPromptModal";
 
 const CategoryCard = ({ category, label, description }) => {
